@@ -1,0 +1,16 @@
+import {auth,db} from './firebase-config.js';
+import {onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js';
+import {collection,addDoc,doc,getDoc,getDocs,query,where,orderBy,limit,updateDoc,deleteDoc,serverTimestamp,onSnapshot} from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js';
+export const CATEGORIES=['ID Cards','Electronics','Bags','Keys','Wallets','Books','Accessories','Other'];
+export const LOCATIONS=['Library','Canteen','Classrooms','Computer Labs','Electronics Labs','Auditorium','Parking','Corridors','Main Entrance','Other'];
+export const CLOUDINARY={cloudName:'vrppq0kp',uploadPreset:'FindLost'};
+export const $=id=>document.getElementById(id);
+export const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+export function userReady(cb){onAuthStateChanged(auth,cb);}
+export function showError(e){console.error(e);return e?.code==='permission-denied'?'Access denied. Check Firestore rules and sign in.':(e?.message||'Something went wrong.');}
+export function fillSelect(el,values,first='Select one'){el.innerHTML=`<option value="">${first}</option>`+values.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join('');}
+export function itemCard(item){let img=item.imageUrl?`<img src="${escapeHTML(item.imageUrl)}" alt="${escapeHTML(item.title)}" loading="lazy" referrerpolicy="no-referrer">`:'<div class="item-placeholder">◎</div>';return `<article class="item-card">${img}<div class="item-card-body"><span class="status-tag ${item.type==='Lost'?'tag-lost':'tag-found'}">${escapeHTML(item.type)}</span><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.category)} · ${escapeHTML(item.location)}</p><p>${escapeHTML(item.eventDate)}</p><a class="btn outline" href="item.html?id=${encodeURIComponent(item.id)}">View details →</a></div></article>`;}
+export function readItems(callback){return onSnapshot(query(collection(db,'items'),where('status','==','Open')),snap=>callback(snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)).slice(0,100)),err=>callback([],err));}
+export function setStatus(el,message,isError=false){el.textContent=message;el.hidden=false;el.style.color=isError?'#b42318':'#166534';}
+export async function uploadPhoto(file){if(!file)return '';if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Use a JPG, PNG or WebP photo.');if(file.size>2*1024*1024)throw Error('Photo must be 2 MB or smaller.');if(CLOUDINARY.cloudName.startsWith('REPLACE')||CLOUDINARY.uploadPreset.startsWith('REPLACE'))throw Error('Configure Cloudinary cloud name and unsigned preset in items.js.');let form=new FormData();form.append('file',file);form.append('upload_preset',CLOUDINARY.uploadPreset);let response=await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(CLOUDINARY.cloudName)}/image/upload`,{method:'POST',body:form});let data=await response.json();if(!response.ok||!data.secure_url)throw Error(data.error?.message||'Photo upload failed.');if(!data.secure_url.startsWith(`https://res.cloudinary.com/${CLOUDINARY.cloudName}/`))throw Error('Unexpected image host.');return data.secure_url;}
+export {collection,addDoc,doc,getDoc,getDocs,query,where,updateDoc,deleteDoc,serverTimestamp,db,auth};

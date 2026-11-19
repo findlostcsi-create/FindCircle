@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Privacy &amp; Security | Find Circle</title><link rel="stylesheet" href="style.css"></head>
+<body class="workspace-loading">
+<main class="wrap page-content privacy-page">
+  <span class="kicker">ACCOUNT SETTINGS</span>
+  <h1>Privacy &amp; Security</h1>
+  <p>Choose what other signed-in users can see, secure your account, and manage your information.</p>
+
+  <section class="panel privacy-section" aria-labelledby="privacy-heading">
+    <div class="privacy-heading"><span class="privacy-section-icon" aria-hidden="true">◉</span><div><h2 id="privacy-heading">Privacy settings</h2><p>Only signed-in users can see shared contact details. Other information in your PICT profile stays private.</p></div></div>
+    <form id="privacyForm">
+      <label class="privacy-setting" for="showProfile">
+        <span class="privacy-setting-text"><strong>Show my profile</strong><small>Let other signed-in users see your name in conversations. If disabled, they see “Student” instead.</small></span>
+        <input id="showProfile" type="checkbox" checked role="switch" aria-label="Show my profile">
+      </label>
+      <label class="privacy-setting" for="showEmail">
+        <span class="privacy-setting-text"><strong>Show my email address</strong><small>Allow any signed-in Find Circle account to view your email if enabled. PICT affiliation is not yet verified. Off by default.</small></span>
+        <input id="showEmail" type="checkbox" role="switch" aria-label="Show my email address">
+      </label>
+      <div class="privacy-action-line"><button id="savePrivacy" type="submit" class="btn primary">Save privacy settings</button><p id="privacyStatus" class="privacy-feedback" role="status" aria-live="polite"></p></div>
+    </form>
+  </section>
+
+  <section class="panel privacy-section" aria-labelledby="security-heading">
+    <div class="privacy-heading"><span class="privacy-section-icon" aria-hidden="true">⚿</span><div><h2 id="security-heading">Account Security</h2><p>Update the password you use to sign in to Find Circle.</p></div></div>
+    <div id="passwordGoogle" class="privacy-info" hidden>You're signed in with Google. Your Google password is managed in your Google Account security settings. <a href="https://myaccount.google.com/security" target="_blank" rel="noopener noreferrer">Open Google Account security</a>.</div>
+    <form id="passwordForm" class="privacy-form-grid" autocomplete="off">
+      <label for="currentPassword">Current password<input type="password" id="currentPassword" autocomplete="current-password" minlength="1" required></label>
+      <label for="newPassword">New password<input type="password" id="newPassword" minlength="8" autocomplete="new-password" required placeholder="At least 8 characters"></label>
+      <label for="confirmNewPassword">Confirm new password<input type="password" id="confirmNewPassword" minlength="8" autocomplete="new-password" required></label>
+      <div class="privacy-action-line"><button class="btn primary" id="changePassword" type="submit">Change password</button><p class="privacy-feedback" id="passwordStatus" role="status" aria-live="polite"></p></div>
+    </form>
+  </section>
+
+  <section class="panel privacy-section" aria-labelledby="management-heading">
+    <div class="privacy-heading"><span class="privacy-section-icon" aria-hidden="true">⇩</span><div><h2 id="management-heading">Account Management</h2><p>Get a copy of your Find Circle records or permanently close your account.</p></div></div>
+    <div class="privacy-management-row"><div><h3>Download my data</h3><p>Save a JSON file containing your profile, settings, reports, claims, and accessible messages.</p></div><button class="btn outline" id="downloadData" type="button">Download my data</button></div>
+    <p class="privacy-feedback" id="exportStatus" role="status" aria-live="polite"></p>
+    <div class="privacy-delete-block">
+      <div><h3>Delete my Account</h3><p>Deletes your Firebase login, student profile, public name and reports. <strong>Existing shared messages, ownership claims and uploaded Cloudinary images are not fully erased by this browser-only feature.</strong> Do not use this as a complete data-erasure process.</p></div>
+      <button class="btn privacy-danger-button" id="showDelete" type="button" aria-expanded="false" aria-controls="deletePanel">Delete my Account</button>
+      <div id="deletePanel" class="privacy-delete-panel" hidden>
+        <p><strong>This action cannot be undone.</strong> Download your data first if you'd like a copy. Re-authentication is required.</p>
+        <label for="deletePassword" id="deletePasswordRow">Confirm your current password<input type="password" id="deletePassword" autocomplete="current-password" placeholder="Current password"></label>
+        <label for="deletePhrase">Type DELETE to confirm<input id="deletePhrase" autocomplete="off" autocapitalize="characters" placeholder="DELETE" spellcheck="false"></label>
+        <div class="privacy-action-line"><button class="btn privacy-danger-button" id="confirmDelete" type="button" disabled>Confirm permanent account deletion</button><button id="cancelDelete" class="btn outline" type="button">Cancel</button></div>
+      </div>
+      <p class="privacy-feedback" id="deleteStatus" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+</main>
+<script type="module" src="app-shell.js"></script><script type="module" src="privacy.js"></script>
+</body></html>
